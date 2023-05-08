@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 public class RefactoredPlayerController : PlayerControllerBase
 {
     public event Action<int> OnScoreChangedEvent;
@@ -49,5 +52,32 @@ public class RefactoredPlayerController : PlayerControllerBase
     public void OnBulletSelected(int index)
     {
         OnBulletSelectedEvent?.Invoke(index);
+    }
+
+    // Implementación de la función Shoot utilizando el pool de balas
+    public override void Shoot()
+    {
+        // Obtener una bala del pool
+        GameObject bullet = BulletPool.Instance.GetFromPool();
+
+        // Posicionar la bala en el punto de spawn
+        bullet.transform.position = spawnPos.position;
+        bullet.transform.rotation = spawnPos.rotation;
+
+        // Agregar fuerza a la bala
+        Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+        bulletRb.AddForce(shootForce * spawnPos.up, ForceMode2D.Impulse);
+
+        // Llamar al evento de selección de bala
+        OnBulletSelectedEvent?.Invoke(currentBulletIndex);
+
+        // Restar una bala al contador
+        bulletsLeft[currentBulletIndex]--;
+
+        // Si se acabaron las balas de este tipo, cambiar de tipo
+        if (bulletsLeft[currentBulletIndex] <= 0)
+        {
+            currentBulletIndex = (currentBulletIndex + 1) % bulletPrefabs.Length;
+        }
     }
 }

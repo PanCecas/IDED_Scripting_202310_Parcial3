@@ -7,7 +7,7 @@ public class RefactoredObstacleSpawner : ObstacleSpawnerBase
     [SerializeField] private MediumObstaclePool mediumObstaclePool;
     [SerializeField] private LargeObstaclePool largeObstaclePool;
 
-    private int radomRange;
+    private int randomRange;
     int newMinX;
 
     public static RefactoredObstacleSpawner Instance { get { return instance; } }
@@ -28,7 +28,7 @@ public class RefactoredObstacleSpawner : ObstacleSpawnerBase
 
     private void Update()
     {
-        radomRange = Random.Range(0, 3);
+        randomRange = Random.Range(0, 3);
         newMinX = Random.Range(-6, 6);
     }
 
@@ -40,20 +40,20 @@ public class RefactoredObstacleSpawner : ObstacleSpawnerBase
 
     protected override void SpawnObject()
     {
-        switch (radomRange)
+        switch (randomRange)
         {
             case 0:
-                GameObject obstacle1 = smallObstaclePool.RetrieveInstance();
+                GameObject obstacle1 = smallObstaclePool.Get();
                 obstacle1.transform.position = new Vector2(newMinX, YPos);
                 break;
 
             case 1:
-                GameObject obstacle2 = mediumObstaclePool.RetrieveInstance();
+                GameObject obstacle2 = mediumObstaclePool.Get();
                 obstacle2.transform.position = new Vector2(newMinX, YPos);
                 break;
 
             case 2:
-                GameObject obstacle3 = largeObstaclePool.RetrieveInstance();
+                GameObject obstacle3 = largeObstaclePool.Get();
                 obstacle3.transform.position = new Vector2(newMinX, YPos);
                 break;
         }
